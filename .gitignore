@@ -1,0 +1,11 @@
+/node_modules
+/tmp
+/test
+/logs
+/.idea
+*.bak
+.env
+.env.backup
+npm-debug.log
+yarn-error.log
+exceptions.log
