@@ -19,6 +19,7 @@ export async function latency(req: express.Request, res: express.Response, next:
     });
 }
 
+// Extra method
 export async function icmpPing(req: express.Request, res: express.Response, next: express.NextFunction) {
     const reqQuery: LatencyRequestQuery = req.query as any;
     if (!reqQuery.host) {
