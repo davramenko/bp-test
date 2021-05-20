@@ -1,16 +1,16 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
-import {Unauthorized, Forbidden, BadRequest, ServiceUnavailable, NotImplemented} from 'http-errors';
-import { LoginRequestBody } from '../interfaces/request/body/LoginRequestBody';
-import {getRepository} from "typeorm";
-import {User} from "../models/User";
+import { Unauthorized, Forbidden, BadRequest, ServiceUnavailable, NotImplemented } from 'http-errors';
+import { getRepository } from 'typeorm';
 import jwt from 'jsonwebtoken';
-import {appConfig} from "../configs/appConfig";
-import {RegistrationRequestBody} from "../interfaces/request/body/RegistrationRequestBody";
-import logger from "../logger";
-import {Session} from "../models/Session";
-import {timespan} from "../helpers/timespan";
-import {LogoutRequestQuery} from "../interfaces/request/query/LogoutRequestQuery";
+import { LoginRequestBody } from '../interfaces/request/body/LoginRequestBody';
+import { User } from '../models/User';
+import { appConfig } from '../configs/appConfig';
+import { RegistrationRequestBody } from '../interfaces/request/body/RegistrationRequestBody';
+import logger from '../logger';
+import { Session } from '../models/Session';
+import { timespan } from '../helpers/timespan';
+import { LogoutRequestQuery } from '../interfaces/request/query/LogoutRequestQuery';
 
 interface TokenData {
     userId: number;
@@ -18,7 +18,7 @@ interface TokenData {
     sesId?: string;
 }
 
-export async function logIn (req: express.Request, res: express.Response, next: express.NextFunction) {
+export async function logIn(req: express.Request, res: express.Response, next: express.NextFunction): Promise<any> {
     const reqBody: LoginRequestBody = req.body;
 
     const foundUser = await getRepository(User).findOne({
@@ -36,37 +36,53 @@ export async function logIn (req: express.Request, res: express.Response, next: 
     if (appConfig.jwtSessions) {
         const createdSession = await getRepository(Session).create({
             userId: foundUser.id,
-            expiresAt: new Date(await timespan(appConfig.jwtAccessExpire) * 1000),
+            expiresAt: new Date((await timespan(appConfig.jwtAccessExpire)) * 1000),
         });
         await createdSession.save();
 
-        accessToken = jwt.sign({
-            userId: foundUser.id,
-            type: 'access',
-            sesId: createdSession.id,
-        }, appConfig.jwtSecret, {
-            expiresIn: appConfig.jwtAccessExpire,
-        });
-        refreshToken = jwt.sign({
-            userId: foundUser.id,
-            type: 'refresh',
-            sesId: createdSession.id,
-        }, appConfig.jwtSecret, {
-            expiresIn: appConfig.jwtRefreshExpire,
-        });
+        accessToken = jwt.sign(
+            {
+                userId: foundUser.id,
+                type: 'access',
+                sesId: createdSession.id,
+            },
+            appConfig.jwtSecret,
+            {
+                expiresIn: appConfig.jwtAccessExpire,
+            },
+        );
+        refreshToken = jwt.sign(
+            {
+                userId: foundUser.id,
+                type: 'refresh',
+                sesId: createdSession.id,
+            },
+            appConfig.jwtSecret,
+            {
+                expiresIn: appConfig.jwtRefreshExpire,
+            },
+        );
     } else {
-        accessToken = jwt.sign({
-            userId: foundUser.id,
-            type: 'access',
-        }, appConfig.jwtSecret, {
-            expiresIn: appConfig.jwtAccessExpire,
-        });
-        refreshToken = jwt.sign({
-            userId: foundUser.id,
-            type: 'refresh',
-        }, appConfig.jwtSecret, {
-            expiresIn: appConfig.jwtRefreshExpire,
-        });
+        accessToken = jwt.sign(
+            {
+                userId: foundUser.id,
+                type: 'access',
+            },
+            appConfig.jwtSecret,
+            {
+                expiresIn: appConfig.jwtAccessExpire,
+            },
+        );
+        refreshToken = jwt.sign(
+            {
+                userId: foundUser.id,
+                type: 'refresh',
+            },
+            appConfig.jwtSecret,
+            {
+                expiresIn: appConfig.jwtRefreshExpire,
+            },
+        );
     }
     return res.json({
         accessToken,
@@ -74,16 +90,15 @@ export async function logIn (req: express.Request, res: express.Response, next: 
     });
 }
 
-export async function refresh (req: express.Request, res: express.Response, next: express.NextFunction) {
+export async function refresh(req: express.Request, res: express.Response, next: express.NextFunction): Promise<any> {
     const authHeader = req.header('authorization');
 
     if (!authHeader) {
         throw new Unauthorized('No auth header');
     }
 
-    //const [,token] = authHeader.split(' ');
     const regexp = new RegExp('^Bearer\\s+(\\S+)$');
-    let matches = await authHeader.match(regexp);
+    const matches = await authHeader.match(regexp);
     if (matches) {
         const token = matches[1];
         let payload: {
@@ -114,69 +129,87 @@ export async function refresh (req: express.Request, res: express.Response, next
                 });
                 throw new Forbidden('Session has expired');
             }
-            const updateInfo = await getRepository(Session).update({
-                id: payload.sesId,
-            }, {
-                expiresAt: new Date(await timespan(appConfig.jwtAccessExpire) * 1000),
-            });
+            const updateInfo = await getRepository(Session).update(
+                {
+                    id: payload.sesId,
+                },
+                {
+                    expiresAt: new Date((await timespan(appConfig.jwtAccessExpire)) * 1000),
+                },
+            );
             if (updateInfo.affected !== 1) {
                 throw new Forbidden('Cannot update session info');
             }
 
-            accessToken = jwt.sign({
-                userId: payload.userId,
-                type: 'access',
-                sesId: payload.sesId,
-            }, appConfig.jwtSecret, {
-                expiresIn: appConfig.jwtAccessExpire,
-            });
-            refreshToken = jwt.sign({
-                userId: payload.userId,
-                type: 'refresh',
-                sesId: payload.sesId,
-            }, appConfig.jwtSecret, {
-                expiresIn: appConfig.jwtRefreshExpire,
-            });
+            accessToken = jwt.sign(
+                {
+                    userId: payload.userId,
+                    type: 'access',
+                    sesId: payload.sesId,
+                },
+                appConfig.jwtSecret,
+                {
+                    expiresIn: appConfig.jwtAccessExpire,
+                },
+            );
+            refreshToken = jwt.sign(
+                {
+                    userId: payload.userId,
+                    type: 'refresh',
+                    sesId: payload.sesId,
+                },
+                appConfig.jwtSecret,
+                {
+                    expiresIn: appConfig.jwtRefreshExpire,
+                },
+            );
         } else {
-            accessToken = jwt.sign({
-                userId: payload.userId,
-                type: 'access',
-            }, appConfig.jwtSecret, {
-                expiresIn: appConfig.jwtAccessExpire,
-            });
-            refreshToken = jwt.sign({
-                userId: payload.userId,
-                type: 'refresh',
-            }, appConfig.jwtSecret, {
-                expiresIn: appConfig.jwtRefreshExpire,
-            });
+            accessToken = jwt.sign(
+                {
+                    userId: payload.userId,
+                    type: 'access',
+                },
+                appConfig.jwtSecret,
+                {
+                    expiresIn: appConfig.jwtAccessExpire,
+                },
+            );
+            refreshToken = jwt.sign(
+                {
+                    userId: payload.userId,
+                    type: 'refresh',
+                },
+                appConfig.jwtSecret,
+                {
+                    expiresIn: appConfig.jwtRefreshExpire,
+                },
+            );
         }
         return res.json({
             accessToken,
             refreshToken,
         });
-    } else {
-        throw new Unauthorized('Invalid auth header');
     }
+    throw new Unauthorized('Invalid auth header');
 }
 
-export async function logout (req: express.Request, res: express.Response, next: express.NextFunction) {
+export async function logout(req: express.Request, res: express.Response, next: express.NextFunction): Promise<any> {
     const reqQuery: LogoutRequestQuery = req.query as any;
 
     if (req.sesId) {
         let delInfo = null;
         if (!reqQuery.all || reqQuery.all === 'false') {
-            logger.debug('authController@logout: deleting just one session: ' + req.sesId);
+            logger.debug(`authController@logout: deleting just one session: ${req.sesId}`);
             delInfo = await getRepository(Session).delete({
                 id: req.sesId,
             });
         } else {
-            logger.debug('authController@logout: deleting all sessions for user ID=' + req.user.id);
+            logger.debug(`authController@logout: deleting all sessions for user ID=${req.user.id}`);
             delInfo = await getRepository(Session).delete({
                 userId: req.user.id,
             });
         }
-        logger.debug('authController@logout: # of sessions deleted: ' + delInfo.affected);
+        logger.debug(`authController@logout: # of sessions deleted: ${delInfo.affected}`);
         // @ts-ignore
         if (delInfo.affected < 1) {
             throw new ServiceUnavailable('Cannot stop session(s)');
@@ -185,23 +218,22 @@ export async function logout (req: express.Request, res: express.Response, next:
     res.status(204).send();
 }
 
-export async function getMe (req: express.Request, res: express.Response, next: express.NextFunction) {
-    return res.json(
-        req.user,
-    );
+export async function getMe(req: express.Request, res: express.Response, next: express.NextFunction): Promise<any> {
+    return res.json(req.user);
 }
 
-async function validateEmail(email: string) : Promise<boolean> {
-    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+async function validateEmail(email: string): Promise<boolean> {
+    const re =
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email.toLowerCase());
 }
 
-async function validatePhone(phone: string) : Promise<boolean> {
+async function validatePhone(phone: string): Promise<boolean> {
     const regex = /^(?:\+[0-9]{2})?\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
     return regex.test(phone);
 }
 
-export async function register(req: express.Request, res: express.Response, next: express.NextFunction) {
+export async function register(req: express.Request, res: express.Response, next: express.NextFunction): Promise<any> {
     const reqBody: RegistrationRequestBody = req.body;
 
     logger.info('authController@register: run');
@@ -220,7 +252,7 @@ export async function register(req: express.Request, res: express.Response, next
         throw new BadRequest('This user identifier is already taken');
     }
 
-    let idType : 'email' | 'phone' | null = null;
+    let idType: 'email' | 'phone' | null = null;
     if (await validateEmail(reqBody.userIdentifier)) {
         idType = 'email';
     } else if (await validatePhone(reqBody.userIdentifier)) {
@@ -230,7 +262,7 @@ export async function register(req: express.Request, res: express.Response, next
     }
     const createdUser = await getRepository(User).create({
         userIdentifier: reqBody.userIdentifier,
-        idType: idType,
+        idType,
         password: await bcrypt.hash(reqBody.password, appConfig.bcryptRounds),
     });
     await createdUser.save();

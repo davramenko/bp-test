@@ -1,31 +1,30 @@
 import express from 'express';
-import {BadRequest} from 'http-errors';
-import {LatencyRequestQuery} from "../interfaces/request/query/LatencyRequestQuery";
+import { BadRequest } from 'http-errors';
 import ping from 'ping';
-import axios from "axios";
+import axios from 'axios';
+import { LatencyRequestQuery } from '../interfaces/request/query/LatencyRequestQuery';
 
 // https://www.npmjs.com/package/axios
-export async function latency(req: express.Request, res: express.Response, next: express.NextFunction) {
+export async function latency(req: express.Request, res: express.Response, next: express.NextFunction): Promise<any> {
     const reqQuery: LatencyRequestQuery = req.query as any;
     if (!reqQuery.host) {
         throw new BadRequest('Host name is undefined');
     }
-    const ts = (new Date()).getTime();
-    const getRes = await axios.get('https://' + reqQuery.host);
-    //console.log(getRes);
+    const ts = new Date().getTime();
+    const getRes = await axios.get(`https://${reqQuery.host}`);
     res.json({
-        status: "SUCCESS",
-        responseTime: (new Date()).getTime() - ts,
+        status: 'SUCCESS',
+        responseTime: new Date().getTime() - ts,
     });
 }
 
 // Extra method
-export async function icmpPing(req: express.Request, res: express.Response, next: express.NextFunction) {
+export async function icmpPing(req: express.Request, res: express.Response, next: express.NextFunction): Promise<any> {
     const reqQuery: LatencyRequestQuery = req.query as any;
     if (!reqQuery.host) {
         throw new BadRequest('Host name is undefined');
     }
-    let pingRes = await ping.promise.probe(reqQuery.host, {
+    const pingRes = await ping.promise.probe(reqQuery.host, {
         timeout: 10,
     });
     res.json(pingRes);

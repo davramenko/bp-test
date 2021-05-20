@@ -1,10 +1,12 @@
 {
-  "name": "my-first-blog",
+  "name": "bp-test",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint --ext .ts ./src",
+    "lintFix": "eslint --ext .ts ./src --fix"
   },
   "keywords": [],
   "author": "",
@@ -41,6 +43,15 @@
     "@types/ms": "^0.7.31",
     "@types/nodemailer": "^6.4.1",
     "@types/ping": "^0.2.0",
-    "@types/twig": "^1.12.5"
+    "@types/twig": "^1.12.5",
+    "@typescript-eslint/eslint-plugin": "^1.9.0",
+    "@typescript-eslint/parser": "^1.9.0",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-typescript": "^4.0.1",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-prettier": "^3.1.4",
+    "prettier": "^2.0.5",
+    "typescript": "^4.2.4"
   }
 }

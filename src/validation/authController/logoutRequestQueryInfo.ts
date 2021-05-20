@@ -1,8 +1,8 @@
-import {IsOptional, IsString, Matches} from "class-validator";
+import { IsOptional, IsString, Matches } from 'class-validator';
 
-export class logoutRequestQueryInfo {
+export class LogoutRequestQueryInfo {
     @IsString()
     @Matches(/^(?:true|false)+$/i)
     @IsOptional()
-    all!: string;
+    public all!: string;
 }

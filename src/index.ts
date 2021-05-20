@@ -2,16 +2,16 @@
 import 'reflect-metadata';
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 import express from 'express';
-import {createConnection, EntityNotFoundError} from "typeorm";
-import bodyParser from "body-parser";
-import {isHttpError, Unauthorized} from 'http-errors';
-import {authRouter} from "./routes/authRouter";
-import logger from './logger';
+import { createConnection, EntityNotFoundError } from 'typeorm';
+import bodyParser from 'body-parser';
+import { isHttpError, Unauthorized } from 'http-errors';
 import cors from 'cors';
-import {appConfig, dbConfig} from "./configs/appConfig";
-import {toolsRouter} from "./routes/toolsRouter";
+import { authRouter } from './routes/authRouter';
+import logger from './logger';
+import { appConfig, dbConfig } from './configs/appConfig';
+import { toolsRouter } from './routes/toolsRouter';
 
-(async () => {
+(async (): Promise<any> => {
     await createConnection({
         type: 'postgres',
         host: dbConfig.host,
@@ -25,13 +25,15 @@ import {toolsRouter} from "./routes/toolsRouter";
     });
     const app = express();
 
-    app.use(bodyParser.urlencoded({
-        inflate: true,
-        limit: '1mb',
-    }));
+    app.use(
+        bodyParser.urlencoded({
+            inflate: true,
+            limit: '1mb',
+        }),
+    );
 
-    app.set('views', __dirname + '/views');
-    logger.debug('index: views: ' + __dirname + '/views');
+    app.set('views', `${__dirname}/views`);
+    logger.debug(`index: views: ${__dirname}/views`);
     app.set('view engine', 'twig');
 
     // This section is optional and can be used to configure twig.
@@ -40,7 +42,7 @@ import {toolsRouter} from "./routes/toolsRouter";
         strict_variables: false,
     });
 
-    var corsOptions = {
+    const corsOptions = {
         origin: '*',
         methods: 'GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD',
         allowedHeaders: 'Authorization, Origin, X-Requested-With, Content-Type, Accept',
@@ -53,11 +55,11 @@ import {toolsRouter} from "./routes/toolsRouter";
     app.use('', toolsRouter);
 
     // This is the last middleware in chain. It handles all of errors caught in application.
-    app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
+    app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction): express.Response => {
         if (isHttpError(err)) {
             return res.status(err.statusCode).json({
                 message: err.message,
-            })
+            });
         }
 
         if (err instanceof EntityNotFoundError) {
@@ -71,8 +73,7 @@ import {toolsRouter} from "./routes/toolsRouter";
         });
     });
 
-    app.listen(appConfig.port, () => {
-        //console.log('server started');
+    app.listen(appConfig.port, (): void => {
         logger.info('server started');
     });
 })();
