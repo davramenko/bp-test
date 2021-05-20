@@ -1,6 +1,6 @@
-import {IsString} from "class-validator";
+import { IsString } from 'class-validator';
 
-export class latencyRequestQueryInfo {
+export class LatencyRequestQueryInfo {
     @IsString()
-    host!: string;
+    public host!: string;
 }

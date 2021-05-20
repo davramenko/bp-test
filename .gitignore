@@ -3,6 +3,7 @@
 /test
 /logs
 /.idea
+/.vs
 *.bak
 .env
 .env.backup

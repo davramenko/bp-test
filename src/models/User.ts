@@ -1,27 +1,35 @@
-import {BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Unique, UpdateDateColumn} from "typeorm";
+import {
+    BaseEntity,
+    Column,
+    CreateDateColumn,
+    Entity,
+    PrimaryGeneratedColumn,
+    Unique,
+    UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 @Unique(['userIdentifier'])
 export class User extends BaseEntity {
-    @PrimaryGeneratedColumn("increment")
-    id!: number;
+    @PrimaryGeneratedColumn('increment')
+    public id!: number;
 
     @Column()
-    userIdentifier!: string;
+    public userIdentifier!: string;
 
-    @Column({ type: "enum", enum: ['phone', 'email']})
-    idType!: 'phone' | 'email';
+    @Column({ type: 'enum', enum: ['phone', 'email'] })
+    public idType!: 'phone' | 'email';
 
     @Column()
-    password?: string;
+    public password?: string;
 
     @CreateDateColumn()
-    createdAt!: Date;
+    public createdAt!: Date;
 
     @UpdateDateColumn()
-    updatedAt!: Date;
+    public updatedAt!: Date;
 
-    toJSON() {
+    public toJSON(): any {
         delete this.password;
         return this;
     }

@@ -1,7 +1,7 @@
-import ms from "ms";
+import ms from 'ms';
 
-export async function timespan(time: string | number | any, iat?: number | undefined) : Promise<number> {
-
+// eslint-disable-next-line import/prefer-default-export
+export async function timespan(time: string | number | any, iat?: number | undefined): Promise<number> {
     const timestamp = iat || Math.floor(Date.now() / 1000);
 
     if (typeof time === 'string') {
@@ -10,9 +10,9 @@ export async function timespan(time: string | number | any, iat?: number | undef
             return 0;
         }
         return Math.floor(timestamp + milliseconds / 1000);
-    } else if (typeof time === 'number') {
-        return timestamp + time;
-    } else {
-        return 0;
     }
+    if (typeof time === 'number') {
+        return timestamp + time;
+    }
+    return 0;
 }

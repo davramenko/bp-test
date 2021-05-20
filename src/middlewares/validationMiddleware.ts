@@ -1,6 +1,6 @@
 import { validate, ValidationError } from 'class-validator';
 import * as express from 'express';
-import {ClassConstructor, plainToClass} from "class-transformer";
+import { ClassConstructor, plainToClass } from 'class-transformer';
 
 export interface ErrorBagEntry {
     param: string;
