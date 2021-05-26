@@ -2,6 +2,7 @@
 /tmp
 /test
 /logs
+/dist
 /.idea
 /.vs
 *.bak
