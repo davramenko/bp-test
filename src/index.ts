@@ -4,7 +4,7 @@ import 'reflect-metadata';
 import express from 'express';
 import { createConnection, EntityNotFoundError } from 'typeorm';
 import bodyParser from 'body-parser';
-import { isHttpError, Unauthorized } from 'http-errors';
+import { isHttpError } from 'http-errors';
 import cors from 'cors';
 import { authRouter } from './routes/authRouter';
 import logger from './logger';
@@ -55,23 +55,25 @@ import { toolsRouter } from './routes/toolsRouter';
     app.use('', toolsRouter);
 
     // This is the last middleware in chain. It handles all of errors caught in application.
-    app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction): express.Response => {
-        if (isHttpError(err)) {
-            return res.status(err.statusCode).json({
+    app.use(
+        (err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction): express.Response => {
+            if (isHttpError(err)) {
+                return res.status(err.statusCode).json({
+                    message: err.message,
+                });
+            }
+
+            if (err instanceof EntityNotFoundError) {
+                return res.status(404).json({
+                    message: err.message,
+                });
+            }
+
+            return res.status(500).json({
                 message: err.message,
             });
-        }
-
-        if (err instanceof EntityNotFoundError) {
-            return res.status(404).json({
-                message: err.message,
-            });
-        }
-
-        return res.status(500).json({
-            message: err.message,
-        });
-    });
+        },
+    );
 
     app.listen(appConfig.port, (): void => {
         logger.info('server started');
