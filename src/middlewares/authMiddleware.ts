@@ -11,7 +11,7 @@ function isScalar(v: any): boolean {
     return typeof v !== 'object' && !Array.isArray(v);
 }
 
-async function transform(body: any, user: User, req: express.Request, res: express.Response): Promise<any> {
+async function transform(body: any, user: User, req: express.Request, _res: express.Response): Promise<any> {
     if (req.sesId) {
         // eslint-disable-next-line no-param-reassign
         body.updatedAccessToken = jwt.sign(
@@ -123,7 +123,7 @@ export async function authorizeUser(
                         // eslint-disable-next-line no-param-reassign
                         json = trans_res;
                     })
-                    .catch((err): any => {
+                    .catch((_err): any => {
                         return res;
                     });
                 if (res.headersSent) return res;

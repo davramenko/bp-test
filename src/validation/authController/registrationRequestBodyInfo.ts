@@ -1,4 +1,4 @@
-import { IsString, Length, Matches, MinLength } from 'class-validator';
+import { IsString, Matches, MinLength } from 'class-validator';
 import { EqualsToField } from '../decorators/equalsToField';
 
 export class RegistrationRequestBodyInfo {

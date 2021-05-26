@@ -5,12 +5,13 @@ import axios from 'axios';
 import { LatencyRequestQuery } from '../interfaces/request/query/LatencyRequestQuery';
 
 // https://www.npmjs.com/package/axios
-export async function latency(req: express.Request, res: express.Response, next: express.NextFunction): Promise<any> {
+export async function latency(req: express.Request, res: express.Response, _next: express.NextFunction): Promise<any> {
     const reqQuery: LatencyRequestQuery = req.query as any;
     if (!reqQuery.host) {
         throw new BadRequest('Host name is undefined');
     }
     const ts = new Date().getTime();
+    // @ts-ignore
     const getRes = await axios.get(`https://${reqQuery.host}`);
     res.json({
         status: 'SUCCESS',
@@ -19,7 +20,7 @@ export async function latency(req: express.Request, res: express.Response, next:
 }
 
 // Extra method
-export async function icmpPing(req: express.Request, res: express.Response, next: express.NextFunction): Promise<any> {
+export async function icmpPing(req: express.Request, res: express.Response, _next: express.NextFunction): Promise<any> {
     const reqQuery: LatencyRequestQuery = req.query as any;
     if (!reqQuery.host) {
         throw new BadRequest('Host name is undefined');

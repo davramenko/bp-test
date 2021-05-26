@@ -1,6 +1,6 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
-import { Unauthorized, Forbidden, BadRequest, ServiceUnavailable, NotImplemented } from 'http-errors';
+import { Unauthorized, Forbidden, BadRequest, ServiceUnavailable } from 'http-errors';
 import { getRepository } from 'typeorm';
 import jwt from 'jsonwebtoken';
 import { LoginRequestBody } from '../interfaces/request/body/LoginRequestBody';
@@ -12,13 +12,7 @@ import { Session } from '../models/Session';
 import { timespan } from '../helpers/timespan';
 import { LogoutRequestQuery } from '../interfaces/request/query/LogoutRequestQuery';
 
-interface TokenData {
-    userId: number;
-    type: 'access' | 'refresh';
-    sesId?: string;
-}
-
-export async function logIn(req: express.Request, res: express.Response, next: express.NextFunction): Promise<any> {
+export async function logIn(req: express.Request, res: express.Response, _next: express.NextFunction): Promise<any> {
     const reqBody: LoginRequestBody = req.body;
 
     const foundUser = await getRepository(User).findOne({
@@ -90,7 +84,7 @@ export async function logIn(req: express.Request, res: express.Response, next: e
     });
 }
 
-export async function refresh(req: express.Request, res: express.Response, next: express.NextFunction): Promise<any> {
+export async function refresh(req: express.Request, res: express.Response, _next: express.NextFunction): Promise<any> {
     const authHeader = req.header('authorization');
 
     if (!authHeader) {
@@ -193,7 +187,7 @@ export async function refresh(req: express.Request, res: express.Response, next:
     throw new Unauthorized('Invalid auth header');
 }
 
-export async function logout(req: express.Request, res: express.Response, next: express.NextFunction): Promise<any> {
+export async function logout(req: express.Request, res: express.Response, _next: express.NextFunction): Promise<any> {
     const reqQuery: LogoutRequestQuery = req.query as any;
 
     if (req.sesId) {
@@ -218,7 +212,7 @@ export async function logout(req: express.Request, res: express.Response, next: 
     res.status(204).send();
 }
 
-export async function getMe(req: express.Request, res: express.Response, next: express.NextFunction): Promise<any> {
+export async function getMe(req: express.Request, res: express.Response, _next: express.NextFunction): Promise<any> {
     return res.json(req.user);
 }
 
@@ -233,7 +227,7 @@ async function validatePhone(phone: string): Promise<boolean> {
     return regex.test(phone);
 }
 
-export async function register(req: express.Request, res: express.Response, next: express.NextFunction): Promise<any> {
+export async function register(req: express.Request, res: express.Response, _next: express.NextFunction): Promise<any> {
     const reqBody: RegistrationRequestBody = req.body;
 
     logger.info('authController@register: run');
