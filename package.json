@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint --ext .ts ./src",
-    "lintFix": "eslint --ext .ts ./src --fix"
+    "lintFix": "eslint --ext .ts ./src --fix",
     "build-ts": "node ./node_modules/typescript/bin/tsc"
   },
   "keywords": [],
