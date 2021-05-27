@@ -21,3 +21,4 @@ artifacts:
       - tsconfig.json
       - Dockerfile
       - docker-compose.yaml
+      - docker-compose-db-only.yaml
