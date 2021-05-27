@@ -3,15 +3,19 @@ version: 0.2
 phases:
   install:
     commands:
-      - 'npm install'
+      - 'echo "NOTE: there is nothing to install"'
   build:
     commands:
-      - 'npm run build-ts'
+      - 'echo "NOTE: there is nothing to build"'
 artifacts:
     type: zip
     files:
-        - package.json
-        - package-lock.json
-        - 'dist/**/*'
-        - .env
-        - README.md
+      - package.json
+      - package-lock.json
+      - 'src/**/*'
+      - 'scripts/**/*'
+      - .env
+      - README.md
+      - appspec.yml
+      - ormconfig.json
+      - tsconfig.json

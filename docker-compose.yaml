@@ -1,0 +1,20 @@
+version: '3'
+services:
+  api-server:
+    image: davramenko/bp-test
+    ports:
+      - 3000:3000
+
+  db-server:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: just4pgsql
+    volumes:
+      - /home/tests/data:/var/lib/postgresql/data
+
+  db-adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080

@@ -1,0 +1,14 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /home/projects/bp-test
+hooks:
+  BeforeInstall:
+    - location: scripts/prepare.sh
+      timeout: 60
+      runas: root
+  AfterInstall:
+    - location: scripts/build.sh
+      timeout: 1800
+      runas: root
