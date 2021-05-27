@@ -19,3 +19,4 @@ artifacts:
       - appspec.yml
       - ormconfig.json
       - tsconfig.json
+      - Dockerfile
