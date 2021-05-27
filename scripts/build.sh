@@ -12,14 +12,17 @@ if [ $? != 0 ]; then
 	exit 1
 fi
 
-docker-compose down -f docker-compose-db-only.yaml
-docker-compose up -d -f docker-compose-db-only.yaml
+docker-compose down
+docker kill $(docker ps -q)
+docker rm $(docker ps -a -q)
+
+docker-compose -f docker-compose-db-only.yaml up -d
 if [ $? != 0 ]; then
 	echo "ERROR: Cannot start the DB swarm"
 	exit 1
 fi
 
-docker-compose exec db-server /bin/bash -c "echo \"SELECT 'CREATE DATABASE mydb' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'mydb')\gexec\" | psql -U postgres"
+docker-compose -f docker-compose-db-only.yaml exec db-server /bin/bash -c "echo \"SELECT 'CREATE DATABASE mydb' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'mydb')\gexec\" | psql -U postgres"
 if [ $? != 0 ]; then
 	echo "ERROR: Cannot create the database"
 	exit 1
