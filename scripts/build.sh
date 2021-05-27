@@ -1,5 +1,11 @@
 #!/bin/bash
 
+cd /home/projects/bp-test
+if [ $? != 0 ]; then
+	echo "ERROR: Cannot change the workinbg directory"
+	exit 1
+fi
+
 npm install
 if [ $? != 0 ]; then
 	echo "ERROR: Cannot install project dependencies"
