@@ -6,18 +6,6 @@ if [ $? != 0 ]; then
 	exit 1
 fi
 
-npm install
-if [ $? != 0 ]; then
-	echo "ERROR: Cannot install project dependencies"
-	exit 1
-fi
-
-npm run build-ts
-if [ $? != 0 ]; then
-	echo "ERROR: Cannot compile typescript sources"
-	exit 1
-fi
-
 docker build . -t davramenko/bp-test -t "name:bp-test"
 if [ $? != 0 ]; then
 	echo "ERROR: Cannot build API image"
