@@ -20,3 +20,4 @@ artifacts:
       - ormconfig.json
       - tsconfig.json
       - Dockerfile
+      - docker-compose.yaml
