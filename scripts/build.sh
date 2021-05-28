@@ -22,9 +22,15 @@ if [ $? != 0 ]; then
 	exit 1
 fi
 
-docker-compose -f docker-compose-db-only.yaml exec db-server /bin/bash -c "echo \"SELECT 'CREATE DATABASE mydb' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'mydb')\gexec\" | psql -U postgres"
+docker-compose -f docker-compose-db-only.yaml exec db-server /bin/bash -c "echo \"SELECT 'CREATE DATABASE bp_test_db' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'bp_test_db')\gexec\" | psql -U postgres"
 if [ $? != 0 ]; then
 	echo "ERROR: Cannot create the database"
+	exit 1
+fi
+
+docker-compose -f docker-compose-db-only.yaml exec db-server /bin/bash -c "echo \"ALTER USER postgres WITH PASSWORD 'just4pgsql'\g\" | psql -U postgres"
+if [ $? != 0 ]; then
+	echo "ERROR: Cannot set password for \"postgres\""
 	exit 1
 fi
 

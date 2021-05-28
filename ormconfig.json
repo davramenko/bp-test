@@ -1,27 +1,58 @@
-{
-   "type": "postgres",
-   "host": "localhost",
-   "port": 5432,
-   "username": "postgres",
-   "password": "just4pgsql",
-   "database": "bp_test_db",
+[
+   {
+      "name": "default",
+      "type": "postgres",
+      "host": "localhost",
+      "port": 5432,
+      "username": "postgres",
+      "password": "just4pgsql",
+      "database": "bp_test_db",
 
-   "synchronize": true,
-   "logging": false,
-   "migrationsTableName": "type_orm_migrations",
+      "synchronize": true,
+      "logging": "all",
+      "migrationsTableName": "type_orm_migrations",
 
-   "entities": [
-      "src/models/**/*.ts"
-   ],
-   "migrations": [
-      "src/migration/**/*.ts"
-   ],
-   "subscribers": [
-      "src/subscriber/**/*.ts"
-   ],
-   "cli": {
-      "entitiesDir": "src/models",
-      "migrationsDir": "src/migration",
-      "subscribersDir": "src/subscriber"
+      "entities": [
+         "src/models/**/*.ts"
+      ],
+      "migrations": [
+         "src/migration/**/*.ts"
+      ],
+      "subscribers": [
+         "src/subscriber/**/*.ts"
+      ],
+      "cli": {
+         "entitiesDir": "src/models",
+         "migrationsDir": "src/migration",
+         "subscribersDir": "src/subscriber"
+      }
+   },
+   {
+      "name": "container",
+      "type": "postgres",
+      "host": "db-server",
+      "port": 5432,
+      "username": "postgres",
+      "password": "just4pgsql",
+      "database": "bp_test_db",
+
+      "synchronize": true,
+      "logging": "all",
+      "migrationsTableName": "type_orm_migrations",
+
+      "entities": [
+         "dist/models/**/*.js"
+      ],
+      "migrations": [
+         "dist/migration/**/*.js"
+      ],
+      "subscribers": [
+         "dist/subscriber/**/*.js"
+      ],
+      "cli": {
+         "entitiesDir": "dist/models",
+         "migrationsDir": "dist/migration",
+         "subscribersDir": "dist/subscriber"
+      }
    }
-}
+]

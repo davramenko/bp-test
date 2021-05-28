@@ -12,19 +12,20 @@ import { appConfig, dbConfig } from './configs/appConfig';
 import { toolsRouter } from './routes/toolsRouter';
 
 (async (): Promise<any> => {
-    await createConnection({
-        type: 'postgres',
-        host: dbConfig.host,
-        port: dbConfig.port,
-        username: dbConfig.username,
-        password: dbConfig.password,
-        entities: ['src/models/**/*.ts'],
-        synchronize: true,
-        logging: 'all',
-        database: dbConfig.name,
-    });
-    const app = express();
+    await createConnection(dbConfig.connectionName);
+    // await createConnection({
+    //     type: 'postgres',
+    //     host: dbConfig.host,
+    //     port: dbConfig.port,
+    //     username: dbConfig.username,
+    //     password: dbConfig.password,
+    //     entities: ['src/models/**/*.ts'],
+    //     synchronize: true,
+    //     logging: 'all',
+    //     database: dbConfig.name,
+    // });
 
+    const app = express();
     app.use(
         bodyParser.urlencoded({
             inflate: true,
