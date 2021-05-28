@@ -13,7 +13,6 @@ import { toolsRouter } from './routes/toolsRouter';
 
 (async (): Promise<any> => {
     await createConnection(dbConfig.connectionName);
-
     const app = express();
     app.use(
         bodyParser.urlencoded({
