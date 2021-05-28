@@ -2,9 +2,10 @@ import express from 'express';
 import bcrypt from 'bcrypt';
 import { Unauthorized, Forbidden, BadRequest, ServiceUnavailable } from 'http-errors';
 import jwt from 'jsonwebtoken';
+import { getConnection } from 'typeorm';
 import { LoginRequestBody } from '../interfaces/request/body/LoginRequestBody';
 import { User } from '../models/User';
-import { appConfig } from '../configs/appConfig';
+import { appConfig, dbConfig } from '../configs/appConfig';
 import { RegistrationRequestBody } from '../interfaces/request/body/RegistrationRequestBody';
 import logger from '../logger';
 import { Session } from '../models/Session';
@@ -254,13 +255,15 @@ export async function register(req: express.Request, res: express.Response, _nex
     } else {
         throw new BadRequest('Invalid user identifier');
     }
-    const repo = await getRepository(User);
+    const connection = await getConnection(dbConfig.connectionName);
+    const repo = await connection.getRepository(User);
     const createdUser = await repo.create({
         userIdentifier: reqBody.userIdentifier,
         idType,
         password: await bcrypt.hash(reqBody.password, appConfig.bcryptRounds),
     });
     // await createdUser.save();
-    repo.save(createdUser);
+    // repo.save(createdUser);
+    connection.manager.save(createdUser);
     return res.json(createdUser);
 }

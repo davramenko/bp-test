@@ -46,6 +46,7 @@ import { toolsRouter } from './routes/toolsRouter';
     // This is the last middleware in chain. It handles all of errors caught in application.
     app.use(
         (err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction): express.Response => {
+            console.log(err);
             if (isHttpError(err)) {
                 return res.status(err.statusCode).json({
                     message: err.message,
