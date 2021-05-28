@@ -1,7 +1,6 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import { Unauthorized, Forbidden, BadRequest, ServiceUnavailable } from 'http-errors';
-import { getRepository } from 'typeorm';
 import jwt from 'jsonwebtoken';
 import { LoginRequestBody } from '../interfaces/request/body/LoginRequestBody';
 import { User } from '../models/User';
@@ -11,6 +10,7 @@ import logger from '../logger';
 import { Session } from '../models/Session';
 import { timespan } from '../helpers/timespan';
 import { LogoutRequestQuery } from '../interfaces/request/query/LogoutRequestQuery';
+import { getRepository } from '../helpers/repo';
 
 export async function logIn(req: express.Request, res: express.Response, _next: express.NextFunction): Promise<any> {
     const reqBody: LoginRequestBody = req.body;
