@@ -8,6 +8,7 @@
     "lint": "eslint --ext .ts ./src",
     "lintFix": "eslint --ext .ts ./src --fix",
     "build-ts": "node ./node_modules/typescript/bin/tsc",
+    "build": "rimraf dist && tsc",
     "start": "ts-node -r dotenv/config ./src/index.ts"
   },
   "keywords": [],
@@ -54,6 +55,7 @@
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-prettier": "^3.1.4",
     "prettier": "^2.0.5",
+    "rimraf": "^3.0.2",
     "typescript": "^4.2.4"
   }
 }

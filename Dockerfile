@@ -18,7 +18,7 @@ RUN npm install
 COPY --chown=65534:65534 . /usr/src/app
 
 # TypeScript
-RUN tsc
+RUN npm run build
 
 # Start
 EXPOSE 3000
