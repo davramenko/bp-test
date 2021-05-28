@@ -1,11 +1,11 @@
 import express from 'express';
 import { Forbidden, Unauthorized } from 'http-errors';
 import jwt from 'jsonwebtoken';
-import { getRepository } from 'typeorm';
 import { appConfig } from '../configs/appConfig';
 import { User } from '../models/User';
 import { Session } from '../models/Session';
 import { timespan } from '../helpers/timespan';
+import { getRepository } from '../helpers/repo';
 
 function isScalar(v: any): boolean {
     return typeof v !== 'object' && !Array.isArray(v);
