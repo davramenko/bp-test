@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint --ext .ts ./src",
     "lintFix": "eslint --ext .ts ./src --fix",
-    "build-ts": "node ./node_modules/typescript/bin/tsc"
+    "build-ts": "node ./node_modules/typescript/bin/tsc",
+    "start": "ts-node -r dotenv/config ./src/index.ts"
   },
   "keywords": [],
   "author": "",
