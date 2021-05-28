@@ -254,11 +254,13 @@ export async function register(req: express.Request, res: express.Response, _nex
     } else {
         throw new BadRequest('Invalid user identifier');
     }
-    const createdUser = await getRepository(User).create({
+    const repo = await getRepository(User);
+    const createdUser = await repo.create({
         userIdentifier: reqBody.userIdentifier,
         idType,
         password: await bcrypt.hash(reqBody.password, appConfig.bcryptRounds),
     });
-    await createdUser.save();
+    // await createdUser.save();
+    repo.save(createdUser);
     return res.json(createdUser);
 }
